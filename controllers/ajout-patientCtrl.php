@@ -1,41 +1,48 @@
 <?php
-include 'class/Form.php';
+require 'class/Form.php';
+require 'models/Patients.php';
+
+// $firstnameArray = ['filter' => 'name', 'name' => 'firstname', 'realName' => 'un prénom'];
+// $lastnameArray = ['filter' => 'name', 'name' => 'lastname', 'realName' => 'un nom de famille'];
+// $birthdateArray = ['filter' => 'date', 'name' => 'birthdate', 'realName' => 'une date de naissance'];
+// $inputArray = [ $lastnameArray,$firstnameArray, $birthdateArray];
+
+$inputArray = [
+    ['filter' => 'name', 'name' => 'firstname', 'realName' => 'un prénom', 'placeholder' => '', 'label' => 'Prénom', 'type' => 'text'],
+    ['filter' => 'name', 'name' => 'lastname', 'realName' => 'un nom de famille', 'placeholder' => '', 'label' => 'Nom de famille', 'type' => 'text'],
+    ['filter' => 'date', 'name' => 'birthdate', 'realName' => 'une date de naissance', 'placeholder' => '', 'label' => 'Date de naissance', 'type' => 'date'],
+    ['filter' => 'phone', 'name' => 'phone', 'realName' => 'un numéro de téléphone', 'placeholder' => '', 'label' => 'Téléphone', 'type' => 'text'],
+    ['filter' => 'email', 'name' => 'mail', 'realName' => 'une adresse de couriel', 'placeholder' => '', 'label' => 'Adresse de courriel', 'type' => 'email'],
+];
 //Quand l'utilisateur a appuyé sur le bouton
 if (isset($_POST['addPatient'])) {
     $errorList = [];
     $formVerif = new Form;
-    $firstnameArray = ['filter' => 'name', 'name' => 'firstname', 'realName' => 'un prénom'];
-    $lastnameArray = ['filter' => 'name', 'name' => 'lastname', 'realName' => 'un nom de famille'];
-    $birthdateArray = ['filter' => 'date', 'name' => 'birthdate', 'realName' => 'une date de naissance'];
 
-
-    $inputArray = [ $lastnameArray,$firstnameArray, $birthdateArray];
     $valueArray = [];
     foreach ($inputArray  as $input) {
-        if ($formVerif->check($input['filter'], $input['name'], $input['realName'], $_POST)) {
+        if ($formVerif->checkPost($input)) {
             $valueArray[$input['name']] = $_POST[$input['name']];
         } else {
             $errorList[$input['name']] = $formVerif->getErrorMessage();
         }
     }
 
-    // if ($formVerif->check('name', 'lastname', 'un nom de famille', $_POST)) {
-    //     $lastname = $_POST['lastname'];
-    // } else {
-    //     $errorList['lastname'] = $formVerif->getErrorMessage();
-    // }
-
-    // if ($formVerif->check('name', 'firstname', 'un prénom', $_POST)) {
-    //     $firstname = $_POST['firstname'];
-    // } else {
-    //     $errorList['firstname'] = $formVerif->getErrorMessage();
-    // }
-
-    // if ($formVerif->check('date', 'birthdate', 'une date de naissance', $_POST)) {
-    //     $birthdate = $_POST['birthdate'];
-    // } else {
-    //     $errorList['birthdate'] = $formVerif->getErrorMessage();
-    // }
-
     var_dump($errorList);
+
+    if (count($errorList) == 0) {
+        $patient = new Patients;
+        $patient->setLastname(htmlspecialchars($valueArray['lastname']));
+        $patient->setFirstname(htmlspecialchars($valueArray['firstname']));
+        $patient->setBirthdate(htmlspecialchars($valueArray['birthdate']));
+        $patient->setPhone(htmlspecialchars($valueArray['phone']));
+        $patient->setMail(htmlspecialchars($valueArray['mail']));
+        if (!$patient->checkPatientIfExists()) {
+            $patient->addPatient();
+            header('location: index.php');
+            exit;
+        }else{
+            $errorList['addPatient'] = 'Ce patient existe déjà';
+        }
+    }
 }

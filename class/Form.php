@@ -44,12 +44,15 @@ class Form
                 break;
             case 'phone':
                 $check = preg_match($this->regexPhone, $this->inputValue);
+                $this->errorMessage = 'Merci de renseigner ' . $this->inputNameError . ' ne contenant que des chiffres et des séparateurs (espace, tiret).';
                 break;
             case 'email':
                 $check = filter_var($this->inputValue, FILTER_VALIDATE_EMAIL);
+                $this->errorMessage = 'Merci de renseigner ' . $this->inputNameError . ' valide.';
                 break;
             case 'date':
                 $check =  preg_match($this->regexDate, $this->inputValue);
+                $this->errorMessage = 'Merci de renseigner ' . $this->inputNameError . ' respectant ce format : jj/mm/aaaa.';
                 if ($check) {
                     $check = $this->checkDate();
                 }
@@ -81,13 +84,13 @@ class Form
      * @param array $form
      * @return boolean
      */
-    public function check(string $type, string $inputName, string $inputNameError, array $form): bool
+    private function check(array $input, array $form): bool
     {
-        $this->inputName = $inputName;
-        $this->inputNameError = $inputNameError;
-        $this->inputValue = $form[$inputName];
+        $this->inputName = $input['filter'];
+        $this->inputNameError = $input['realName'];
+        $this->inputValue = $form[$input['name']];
         $check = false;
-        $check = $this->isNotEmpty() && $this->checkFormat($type);
+        $check = $this->isNotEmpty() && $this->checkFormat($this->inputName);
         // if($this->isNotEmpty()){
         //     if($this->checkFormat('name')){
         //     $check = true;
@@ -98,6 +101,14 @@ class Form
         //     $check = false;
         // }
         return $check;
+    }
+
+    public function checkPost(array $input):bool{
+        return $this->check($input, $_POST);
+    }
+
+    public function checkGet(array $input):bool{
+        return $this->check($input, $_GET);
     }
 
     public function getErrorMessage(): string
