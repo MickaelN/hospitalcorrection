@@ -1,4 +1,5 @@
 <?php
+include 'controllers/ajout-patientCtrl.php';
 include 'parts/header.php';
 ?>
 <div class="container">
@@ -25,7 +26,7 @@ include 'parts/header.php';
         <input type="email" class="form-control" id="mail" name="mail">
     </div>
 
-    <button type="submit" class="btn btn-success">Ajout du patient</button>
+    <input type="submit" class="btn btn-success" name="addPatient" value="Ajout du patient" >
 </form>
 </div>
 <?php
