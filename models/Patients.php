@@ -58,6 +58,13 @@ class Patients
         return $check;
     }
 
+    public function getPatientsList(): array
+    {
+        $query = 'SELECT `lastname`, `firstname`, DATE_FORMAT(`birthdate`, \'%d/%m/%Y\') AS `birthdate` FROM '. $this->table;
+        $queryStatement = $this->db->query($query);
+        return $queryStatement->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function setLastname(string $value): void
     {
         $this->lastname = strtoupper($value);
