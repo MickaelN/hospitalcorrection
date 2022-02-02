@@ -10,6 +10,7 @@ include 'parts/header.php';
             <th>Nom</th>
             <th>Prénom</th>
             <th>Date de naissance</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@ include 'parts/header.php';
             <td><?= $patient->lastname ?></td>
             <td><?= $patient->firstname ?></td>
             <td><?= $patient->birthdate ?></td>
+            <td><a class="btn btn-success" href="profil-patient.php?patientId=<?= $patient->id ?>">Voir le profil</a></td>
         </tr>
         <?php } ?>
     </tbody>

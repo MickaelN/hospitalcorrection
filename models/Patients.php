@@ -57,14 +57,45 @@ class Patients
         }
         return $check;
     }
-
+    /**
+     * Permet de récupérer la liste de tout les patients
+     *
+     * @return array
+     */
     public function getPatientsList(): array
     {
-        $query = 'SELECT `lastname`, `firstname`, DATE_FORMAT(`birthdate`, \'%d/%m/%Y\') AS `birthdate` FROM '. $this->table;
+        $query = 'SELECT `id`,`lastname`, `firstname`, DATE_FORMAT(`birthdate`, \'%d/%m/%Y\') AS `birthdate` FROM ' . $this->table;
         $queryStatement = $this->db->query($query);
         return $queryStatement->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getPatientInfo(): bool
+    {
+        $query = 'SELECT `lastname`, `firstname`, DATE_FORMAT(`birthdate`, \'%d/%m/%Y\') AS `birthdate`,`phone`, `mail` FROM ' . $this->table
+            . ' WHERE id= :id';
+        $queryStatement = $this->db->prepare($query);
+        $queryStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $queryStatement->execute();
+        $result = $queryStatement->fetch(PDO::FETCH_OBJ);
+        //Si j'ai un résultat j'hydrate mon objet.
+        if(is_object($result)){
+            $this->lastname = $result->lastname;
+            $this->firstname = $result->firstname;
+            $this->birthdate = $result->birthdate;
+            $this->phone = $result->phone;
+            $this->mail = $result->mail;
+            return true;
+        }
+        return false;
+    }
+
+    /***
+     * SETTER
+     */
+    public function setId(int $value): void
+    {
+        $this->id = $value;
+    }
     public function setLastname(string $value): void
     {
         $this->lastname = strtoupper($value);
@@ -89,5 +120,27 @@ class Patients
     public function setMail(string $value): void
     {
         $this->mail = $value;
+    }
+
+    /***
+     * GETTER
+     */
+    public function getId():int{
+        return $this->id;
+    }
+    public function getLastname():string{
+        return $this->lastname;
+    }
+    public function getFirstname():string{
+        return $this->firstname;
+    }
+    public function getBirthdate():string{
+        return $this->birthdate;
+    }
+    public function getPhone():string{
+        return $this->phone;
+    }
+    public function getMail():string{
+        return $this->mail;
     }
 }
