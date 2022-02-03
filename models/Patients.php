@@ -78,7 +78,7 @@ class Patients
         $queryStatement->execute();
         $result = $queryStatement->fetch(PDO::FETCH_OBJ);
         //Si j'ai un résultat j'hydrate mon objet.
-        if(is_object($result)){
+        if (is_object($result)) {
             $this->lastname = $result->lastname;
             $this->firstname = $result->firstname;
             $this->birthdate = $result->birthdate;
@@ -89,6 +89,14 @@ class Patients
         return false;
     }
 
+    public function updatePatient($field, $value): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET `' . $field . '` = :' . $field . ' WHERE `id` = :id';
+        $queryStatement = $this->db->prepare($query);
+        $queryStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $queryStatement->bindValue(':' . $field, $value, PDO::PARAM_STR);
+        return $queryStatement->execute();
+    }
     /***
      * SETTER
      */
@@ -125,22 +133,28 @@ class Patients
     /***
      * GETTER
      */
-    public function getId():int{
+    public function getId(): int
+    {
         return $this->id;
     }
-    public function getLastname():string{
+    public function getLastname(): string
+    {
         return $this->lastname;
     }
-    public function getFirstname():string{
+    public function getFirstname(): string
+    {
         return $this->firstname;
     }
-    public function getBirthdate():string{
+    public function getBirthdate(): string
+    {
         return $this->birthdate;
     }
-    public function getPhone():string{
+    public function getPhone(): string
+    {
         return $this->phone;
     }
-    public function getMail():string{
+    public function getMail(): string
+    {
         return $this->mail;
     }
 }
