@@ -3,12 +3,12 @@ include 'controllers/profil-patientCtrl.php';
 include 'parts/header.php';
 if ($isPatientFound) { ?>
     <h1>Information du patient <?= $patient->getLastname() ?> <?= $patient->getFirstname() ?></h1>
-    <ul>
-        <li><?= $patient->getLastname() ?></li>
-        <li><?= $patient->getFirstname() ?></li>
-        <li><?= $patient->getBirthdate() ?></li>
-        <li><a href="mailto:<?= $patient->getMail() ?>"><?= $patient->getMail() ?></a></li>
-        <li><a href="telto:<?= $patient->getPhone() ?>"><?= $patient->getPhone() ?></a></li>
+    <ul id="patientInfo">
+        <li><span id="lastnameSpan"><?= $patient->getLastname() ?></span><input type="text" name="lastname" id="lastnameInput" value="<?= $patient->getLastname() ?>"> <i class="fas fa-edit infoEdit" id="lastnameIconModify" data-modify="lastname"></i><i class="fas fa-check-square" id="lastnameIconCheck"></i></li>
+        <li><span id="firstnameSpan"><?= $patient->getFirstname() ?></span><input type="text" name="firstname" id="firstnameInput" value="<?= $patient->getFirstname() ?>"> <i class="fas fa-edit infoEdit" id="firstnameIconModify" data-modify="firstname"></i><i class="fas fa-check-square" id="firstnameIconCheck"></i></li>
+        <li><span id="birthdateSpan"><?= $patient->getBirthdate() ?></span><input type="date" name="birthdate" id="birthdateInput" value="<?= $patient->getBirthdate() ?>">  <i class="fas fa-edit infoEdit" id="birthdateIconModify" data-modify="birthdate"></i><i class="fas fa-check-square" id="birthdateIconCheck"></i></li>
+        <li><span id="mailSpan"><a href="mailto:<?= $patient->getMail() ?>"><?= $patient->getMail() ?></a></span><input type="email" name="mail" id="mailInput" value="<?= $patient->getMail() ?>"> <i class="fas fa-edit infoEdit" id="mailIconModify" data-modify="mail"></i><i class="fas fa-check-square" id="mailIconCheck"></i></li>
+        <li><span id="phoneSpan"><a href="telto:<?= $patient->getPhone() ?>"><?= $patient->getPhone() ?></a></span><input type="text" name="phone" id="phoneInput" value="<?= $patient->getPhone() ?>"> <i class="fas fa-edit infoEdit" id="phoneIconModify" data-modify="phone"></i><i class="fas fa-check-square" id="phoneIconCheck"></i></li>
     </ul>
 <?php } else { ?>
     <h1>Patient non trouvé</h1>
