@@ -43,7 +43,7 @@ iconCheckArray.map((elmt) => {
         //On oublie pas ça sinon le controller ne recevera rien
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         //On spécifie les données à envoyer
-        xhr.send("field=" + field + "&value=" + value + "&id=" + id)
+        xhr.send("field=" + field + "&" + field + "=" + value + "&id=" + id)
         //On attend une réponse du controller
         xhr.onreadystatechange = function () {
             //Si on a reçu une réponse et qu'elle est positive
@@ -51,6 +51,8 @@ iconCheckArray.map((elmt) => {
                 if (xhr.responseText == 1) {
                     document.getElementById(field + "Span").innerText = value
                     disableEdit(field)
+                }else if(xhr.responseText != 0){
+                    alert(xhr.responseText)
                 }
             }
         };
