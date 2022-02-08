@@ -24,6 +24,14 @@
             <li><a class="dropdown-item" href="liste-patients.php">Liste</a></li>
           </ul>
         </li>
+        <li>
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Rendez-vous
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="ajout-rendezvous.php">Ajout</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>

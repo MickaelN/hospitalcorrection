@@ -1,5 +1,5 @@
 <?php
-class Patients
+class Patients extends Database
 {
     private int $id;
     private string $lastname;
@@ -7,17 +7,7 @@ class Patients
     private string $birthdate;
     private string $phone;
     private string $mail;
-    private PDO $db;
     private string $table = '`patients`';
-
-    public function __construct()
-    {
-        try {
-            $this->db = new PDO('mysql:host=localhost;dbname=hospital;charset=utf8', 'root');
-        } catch (Exception $error) {
-            die($error->getMessage());
-        }
-    }
 
     public function addPatient(): bool
     {
@@ -96,6 +86,20 @@ class Patients
         $queryStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
         $queryStatement->bindValue(':' . $field, $value, PDO::PARAM_STR);
         return $queryStatement->execute();
+    }
+
+    public function getPatientListSelect(?string $search = null): array
+    {
+        $query = 'SELECT `id` AS `value` , CONCAT(`lastname`, \' \', `firstname`,\' \', DATE_FORMAT(`birthdate`, \'%d/%m/%Y\')) AS `name` FROM ' . $this->table . ' ORDER BY `lastname`, `firstname` ASC ';
+        if (!is_null($search)) {
+            $query .= 'WHERE `lastname` LIKE :search';
+            $queryStatement = $this->db->prepare($query);
+            $queryStatement->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+            $queryStatement->execute();
+        } else {
+            $queryStatement = $this->db->query($query);
+        }
+        return $queryStatement->fetchAll(PDO::FETCH_OBJ);
     }
     /***
      * SETTER

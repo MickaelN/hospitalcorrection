@@ -1,5 +1,6 @@
 <?php
 require 'class/Form.php';
+require 'models/Database.php';
 require 'models/Patients.php';
 
 // $firstnameArray = ['filter' => 'name', 'name' => 'firstname', 'realName' => 'un prénom'];
