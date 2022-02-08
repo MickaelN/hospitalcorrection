@@ -90,7 +90,7 @@ class Patients extends Database
 
     public function getPatientListSelect(?string $search = null): array
     {
-        $query = 'SELECT `id` AS `value` , CONCAT(`lastname`, \' \', `firstname`,\' \', DATE_FORMAT(`birthdate`, \'%d/%m/%Y\')) AS `name` FROM ' . $this->table . ' ORDER BY `lastname`, `firstname` ASC ';
+        $query = 'SELECT `id` AS `value` , CONCAT(`lastname`, \' \', `firstname`,\' \', DATE_FORMAT(`birthdate`, \'%d/%m/%Y\')) AS `name` FROM ' . $this->table ;
         if (!is_null($search)) {
             $query .= 'WHERE `lastname` LIKE :search';
             $queryStatement = $this->db->prepare($query);
