@@ -30,6 +30,7 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="ajout-rendezvous.php">Ajout</a></li>
+            <li><a class="dropdown-item" href="liste-rendezvous.php">Liste</a></li>
           </ul>
         </li>
       </ul>

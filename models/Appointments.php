@@ -24,7 +24,7 @@ class Appointments extends Database
         return $this->checkEntityIfExistsByFilter($fieldArray);
     }
 
-    public function addAppointment():bool
+    public function addAppointment(): bool
     {
         $query = 'INSERT INTO ' . $this->table
             . ' (`dateHour`,`idPatients`) '
@@ -33,6 +33,16 @@ class Appointments extends Database
         $queryStatement->bindValue(':dateHour', $this->dateHour, PDO::PARAM_STR);
         $queryStatement->bindValue(':idPatients', $this->idPatients, PDO::PARAM_INT);
         return $queryStatement->execute();
+    }
+
+    public function getAppointementsList()
+    {
+        $query = 'SELECT DATE_FORMAT(`ap`.`dateHour`,\'%d/%m/%Y\') AS `date`, DATE_FORMAT(`ap`.`dateHour`,\'%Hh%i\') AS `time` ,`pa`.`lastname`,`pa`.`firstname`'
+            . ' FROM ' . $this->table . ' AS `ap`'
+            . ' INNER JOIN `patients` AS `pa` ON `pa`.`id` = `ap`.`idPatients`'
+            . ' ORDER  BY `dateHour` ASC';
+        $queryStatement = $this->db->query($query);
+        return $queryStatement->fetchAll(PDO::FETCH_OBJ);
     }
 
     /***
