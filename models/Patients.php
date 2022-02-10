@@ -1,13 +1,13 @@
 <?php
 class Patients extends Database
 {
-    private int $id;
-    private string $lastname;
-    private string $firstname;
-    private string $birthdate;
-    private string $phone;
-    private string $mail;
-    private string $table = '`patients`';
+    protected int $id;
+    protected string $lastname;
+    protected string $firstname;
+    protected string $birthdate;
+    protected string $phone;
+    protected string $mail;
+    protected string $table = '`patients`';
 
     public function addPatient(): bool
     {
@@ -29,24 +29,26 @@ class Patients extends Database
      */
     public function checkPatientIfExists(): bool
     {
-        $check = false;
-        $query = 'SELECT COUNT(`id`) AS `number` FROM ' . $this->table
-            . ' WHERE `lastname` = :lastname AND `firstname` = :firstname AND `birthdate` = :birthdate';
-        $queryStatement = $this->db->prepare($query);
-        $queryStatement->bindValue(':lastname', $this->lastname, PDO::PARAM_STR);
-        $queryStatement->bindValue(':firstname', $this->firstname, PDO::PARAM_STR);
-        $queryStatement->bindValue(':birthdate', $this->birthdate, PDO::PARAM_STR);
-        $queryStatement->execute();
-        // $number = $queryStatement->fetch(PDO::FETCH_OBJ)->number;
-        $toto = $queryStatement->fetch(PDO::FETCH_OBJ);
-        // number = 0 si il n'y a pas de patient identique
-        // number = 1 si il y a un patient identique
-        $number = $toto->number;
-        if ($number) {
-            $check = true;
+        $fieldArray = [];
+        $fieldName = ['lasname', 'firstname', 'birthdate'];
+        $field = new stdClass;
+        $field->type = PDO::PARAM_STR;
+        foreach ($fieldName as $name) {
+            $field->name = $name;
+            $fieldArray = [$field];
         }
-        return $check;
+        return $this->checkEntityIfExistsByFilter($fieldArray);
     }
+    public function checkPatientIfExistsById(): bool
+    {
+        $field = new stdClass;
+        $field->name = 'id';
+        $field->type = PDO::PARAM_INT;
+        $fieldArray = [$field];
+        return $this->checkEntityIfExistsByFilter($fieldArray);
+    }
+
+    
     /**
      * Permet de récupérer la liste de tout les patients
      *
@@ -90,9 +92,13 @@ class Patients extends Database
 
     public function getPatientListSelect(?string $search = null): array
     {
-        $query = 'SELECT `id` AS `value` , CONCAT(`lastname`, \' \', `firstname`,\' \', DATE_FORMAT(`birthdate`, \'%d/%m/%Y\')) AS `name` FROM ' . $this->table ;
+        /**
+         * %:search%  => %'toto'%
+         * '%toto%'
+         */
+        $query = 'SELECT `id` AS `value` , CONCAT(`lastname`, \' \', `firstname`,\' \', DATE_FORMAT(`birthdate`, \'%d/%m/%Y\')) AS `name` FROM ' . $this->table;
         if (!is_null($search)) {
-            $query .= 'WHERE `lastname` LIKE :search';
+            $query .= 'WHERE `lastname` LIKE :search OR `firstname` LIKE :search OR DATE_FORMAT(`birthdate`,\'%d/%m/%Y\') LIKE :search';
             $queryStatement = $this->db->prepare($query);
             $queryStatement->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
             $queryStatement->execute();

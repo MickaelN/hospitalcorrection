@@ -5,8 +5,8 @@ include 'parts/header.php';
 <h1>Ajout d'un rendez vous</h1>
 <form method="POST" class="col-4 p-2 row">
     <div class="mb-3">
-        <label for="search" class="form-label">Recherche</label>
-        <input type="search" class="form-control" id="search" name="search" placeholder="Saisissez votre recherche">
+        <label for="searchPatient" class="form-label">Recherche</label>
+        <input type="search" class="form-control" id="search" name="searchPatient" placeholder="Saisissez votre recherche">
     </div>
     <div class="mb-3">
         <label for="patient" class="form-label">Patient</label>
@@ -20,7 +20,7 @@ include 'parts/header.php';
     </div>
     <div class="mb-3">
         <label for="datehour" class="form-label">Date</label>
-        <input type="datetime-local" class="form-control" id="datehour" name="datehour">
+        <input type="datetime-local" class="form-control" id="datehour" name="datehour" step="900">
     </div>
     <input type="submit" class="btn btn-success" name="addAppointment" value="Ajout du rdv">
 </form>
