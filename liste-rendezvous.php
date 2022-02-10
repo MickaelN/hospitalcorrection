@@ -11,19 +11,20 @@ include 'parts/header.php';
             <th>Horaire</th>
             <th>Nom</th>
             <th>Prénom</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <?php
-        foreach ($appointmentList as $app) {   ?>
+        foreach ($appointmentList as $app) { ?>
             <tr>
                 <td><?= $app->date ?></td>
                 <td><?= $app->time ?></td>
                 <td><?= $app->lastname ?></td>
                 <td><?= $app->firstname ?></td>
+                <td><a href="rendezvous.php?id=<?= $app->id ?>" class="btn btn-warning">Modifier</a></td>
             </tr>
         <?php } ?>
-
     </tbody>
 </table>
 

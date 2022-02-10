@@ -35,14 +35,27 @@ class Appointments extends Database
         return $queryStatement->execute();
     }
 
-    public function getAppointementsList()
+    public function getAppointementsList():array
     {
-        $query = 'SELECT DATE_FORMAT(`ap`.`dateHour`,\'%d/%m/%Y\') AS `date`, DATE_FORMAT(`ap`.`dateHour`,\'%Hh%i\') AS `time` ,`pa`.`lastname`,`pa`.`firstname`'
+        $query = 'SELECT DATE_FORMAT(`ap`.`dateHour`,\'%d/%m/%Y\') AS `date`, DATE_FORMAT(`ap`.`dateHour`,\'%Hh%i\') AS `time` ,`pa`.`lastname`,`pa`.`firstname`, `ap`.`id`'
             . ' FROM ' . $this->table . ' AS `ap`'
             . ' INNER JOIN `patients` AS `pa` ON `pa`.`id` = `ap`.`idPatients`'
             . ' ORDER  BY `dateHour` ASC';
         $queryStatement = $this->db->query($query);
         return $queryStatement->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getAppointementById()
+    {
+        $query = 'SELECT DATE_FORMAT(`ap`.`dateHour`,\'%d/%m/%Y\') AS `date`, DATE_FORMAT(`ap`.`dateHour`,\'%Hh%i\') AS `time` ,`pa`.`lastname`,`pa`.`firstname`,`pa`.`mail`, DATE_FORMAT(`pa`.`birthdate`,\'%d/%m/%Y\') AS `birthdate`,`pa`.`phone`'
+            . ' FROM ' . $this->table . ' AS `ap`'
+            . ' INNER JOIN `patients` AS `pa` ON `pa`.`id` = `ap`.`idPatients`'
+            . ' WHERE `ap`.`id` = :id'
+            . ' ORDER  BY `dateHour` ASC';
+        $queryStatement = $this->db->prepare($query);
+        $queryStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $queryStatement->execute();
+        return $queryStatement->fetch(PDO::FETCH_OBJ);
     }
 
     /***
