@@ -1,5 +1,6 @@
 <?php
 require 'models/Database.php';
+require 'models/Main.php';
 require 'models/Appointments.php';
 if(isset($_GET['id'])){
     $appointments = new Appointments;

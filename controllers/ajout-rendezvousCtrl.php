@@ -3,11 +3,13 @@
 //Dans le cas de l'AJAX
 if (isset($_POST['search'])) {
     include '../models/Database.php';
+    require '../models/Main.php';
     include '../models/Patients.php';
     $patient = new Patients;
     echo json_encode($patient->getPatientListSelect($_POST['search']));
 } else { //Dans les autres cas
     include 'models/Database.php';
+    require 'models/Main.php';
     include 'models/Patients.php';
     include 'models/Appointments.php';
 

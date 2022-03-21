@@ -1,7 +1,9 @@
 <?php
 require 'class/Form.php';
 require 'models/Database.php';
+require 'models/Main.php';
 require 'models/Patients.php';
+require 'models/Appointments.php';
 
 // $firstnameArray = ['filter' => 'name', 'name' => 'firstname', 'realName' => 'un prénom'];
 // $lastnameArray = ['filter' => 'name', 'name' => 'lastname', 'realName' => 'un nom de famille'];
@@ -33,16 +35,27 @@ if (isset($_POST['addPatient'])) {
 
     if (count($errorList) == 0) {
         $patient = new Patients;
+        $appointment = new Appointments;
         $patient->setLastname(htmlspecialchars($valueArray['lastname']));
         $patient->setFirstname(htmlspecialchars($valueArray['firstname']));
         $patient->setBirthdate(htmlspecialchars($valueArray['birthdate']));
         $patient->setPhone(htmlspecialchars($valueArray['phone']));
         $patient->setMail(htmlspecialchars($valueArray['mail']));
         if (!$patient->checkPatientIfExists()) {
-            $patient->addPatient();
-            header('location: index.php');
-            exit;
-        }else{
+            try {
+                $patient->beginTransaction();
+                $patient->addPatient();
+                $appointment->setDatehour('2022-03-21 11:00');
+                $appointment->setIdPatients($patient->lastInsertId());
+                $appointment->addAppointment();
+                $patient->commit();
+                header('location: index.php');
+                exit;
+            } catch (PDOException $error) {
+                $patient->rollback();
+                die($error->getMessage());
+            }
+        } else {
             $errorList['addPatient'] = 'Ce patient existe déjà';
         }
     }

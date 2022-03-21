@@ -3,6 +3,7 @@ $scriptList = ['assets/js/moment-with-locales.js', 'assets/js/patientForm.js'];
 $id = isset($_GET['patientId']) ? $_GET['patientId'] : null;
 if (!isset($_POST['field'])) {
     require 'models/Database.php';
+    require 'models/Main.php';
     require 'models/Patients.php';
     $isPatientFound = false;
     if (isset($_GET['patientId'])) {
@@ -12,6 +13,7 @@ if (!isset($_POST['field'])) {
     }
 } else {
     require '../models/Database.php';
+    require '../models/Main.php';
     require '../models/Patients.php';
     require '../class/Form.php';
     $ajaxValid = new Form;

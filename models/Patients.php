@@ -1,5 +1,5 @@
 <?php
-class Patients extends Database
+class Patients extends Main
 {
     protected int $id;
     protected string $lastname;
@@ -8,6 +8,7 @@ class Patients extends Database
     protected string $phone;
     protected string $mail;
     protected string $table = '`patients`';
+
 
     public function addPatient(): bool
     {

@@ -1,5 +1,5 @@
 <?php
-class Appointments extends Database
+class Appointments extends Main
 {
 
     protected int $id;
@@ -7,12 +7,6 @@ class Appointments extends Database
     protected int $idPatients;
 
     protected string $table = '`appointments`';
-
-    // public function __construct()
-    // {
-    //     $toto =true;
-    //     parent::__construct();
-    // }
 
     public function checkAppointmentIfExists()
     {

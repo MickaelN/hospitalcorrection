@@ -1,40 +1,26 @@
 <?php
-class Database {
-    protected PDO $db;
-    protected string $table = '';
+class Database
+{
+    protected static PDO $db;
 
-    public function __construct()
+    /**
+     * Méthode pour le singleton
+     *
+     * @return PDO
+     */
+    public static function getConnection(): PDO
     {
-        try {
-            $this->db = new PDO('mysql:host=localhost;dbname=hospital;charset=utf8', 'root');
-        } catch (Exception $error) {
-            die($error->getMessage());
+        if (!isset(self::$db)) {
+            try {
+                $pdo = new PDO('mysql:host=localhost;dbname=hospital;charset=utf8', 'root');
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$db = $pdo;
+            } catch (Exception $error) {
+                die($error->getMessage());
+            }
         }
+        return self::$db;
     }
 
-    protected function checkEntityIfExistsByFilter(array $fieldList): bool
-    {
-        $check = false;
-        $whereArray = [];
-        foreach ($fieldList as $field) {
-            $whereArray[] = '`' . $field->name . '` =  :' . $field->name; //`lastname` = :lastname
-        }
-        $query = 'SELECT COUNT(`id`) AS `number` FROM ' . $this->table
-            . ' WHERE ' . implode(' AND ', $whereArray);
-        $queryStatement = $this->db->prepare($query);
-        foreach ($fieldList as $field) {
-            $fieldName = $field->name;
-            $queryStatement->bindValue(':' . $fieldName, $this->$fieldName, $field->type);
-        }
-        $queryStatement->execute();
-        // $number = $queryStatement->fetch(PDO::FETCH_OBJ)->number;
-        $toto = $queryStatement->fetch(PDO::FETCH_OBJ);
-        // number = 0 si il n'y a pas de patient identique
-        // number = 1 si il y a un patient identique
-        $number = $toto->number;
-        if ($number) {
-            $check = true;
-        }
-        return $check;
-    }
+  
 }
